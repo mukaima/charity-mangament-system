@@ -1,4 +1,4 @@
-package com.charity.charity_management_system.enums;
+package com.charity_management_system.enums;
 
 public enum PaymentMethod {
 

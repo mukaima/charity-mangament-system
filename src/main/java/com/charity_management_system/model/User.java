@@ -1,9 +1,14 @@
-package com.charity.charity_management_system.model;
+package com.charity_management_system.model;
 
+import com.charity_management_system.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,6 +30,9 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
@@ -36,4 +44,11 @@ public class User {
 
     @Column(name = "zip_code", nullable = false)
     private int zipCode;
+
+    @OneToMany(mappedBy = "user")
+    List<Case> caseList;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties({"user"})
+    List<Donation> donations;
 }

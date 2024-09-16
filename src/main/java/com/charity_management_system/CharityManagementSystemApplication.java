@@ -1,4 +1,4 @@
-package com.charity.charity_management_system;
+package com.charity_management_system;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
