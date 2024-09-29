@@ -1,7 +1,6 @@
 package com.charity_management_system.model;
 
 import com.charity_management_system.enums.PaymentMethod;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
