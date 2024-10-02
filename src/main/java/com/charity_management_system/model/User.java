@@ -48,11 +48,11 @@ public class User implements UserDetails {
     private int zipCode;
 
     @OneToMany(mappedBy = "user")
-    List<Case> caseList;
+    private List<Case> caseList;
 
     @OneToMany(mappedBy = "user")
     @JsonIgnoreProperties({"user"})
-    List<Donation> donations;
+    private List<Donation> donations;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

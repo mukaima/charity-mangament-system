@@ -6,7 +6,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CaseDTO {
+public class CaseDto {
 
     private int id;
     private String title;

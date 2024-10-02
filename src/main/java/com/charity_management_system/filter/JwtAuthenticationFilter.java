@@ -27,6 +27,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
+    /**
+     * Validates the JWT token and sets the authentication in the security context if valid.
+     *
+     * @param request     The incoming HTTP request.
+     * @param response    The outgoing HTTP response.
+     * @param filterChain The filter chain to pass the request along.
+     * @throws ServletException If a servlet error occurs.
+     * @throws IOException      If an I/O error occurs.
+     */
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
@@ -63,6 +72,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
+    /**
+     * Specifies the paths where the filter should not be applied.
+     *
+     * @param request The HTTP request.
+     * @return True if the filter should not be applied, false otherwise.
+     * @throws ServletException If a servlet error occurs.
+     */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         return request.getServletPath().equals("/api/auth/login");

@@ -1,6 +1,6 @@
 package com.charity_management_system.service.impl;
 
-import com.charity_management_system.dto.DonationDTO;
+import com.charity_management_system.dto.DonationDto;
 import com.charity_management_system.model.Case;
 import com.charity_management_system.model.Donation;
 import com.charity_management_system.model.User;
@@ -24,13 +24,25 @@ public class DonationServiceImpl implements DonationService {
     private final CaseRepository caseRepository;
     private final CommonService commonService;
 
+    /**
+     * Retrieves all donations made to a specific case.
+     *
+     * @param caseId The ID of the case.
+     * @return A list of Donation entities.
+     */
     @Override
     public List<Donation> getDonationByCaseId(int caseId) {
         return donationRepository.findByCaseEntityId(caseId);
     }
 
+    /**
+     * Creates a new donation for a case.
+     *
+     * @param donationDTO The details of the donation.
+     * @return The created Donation entity.
+     */
     @Override
-    public Donation makeDonation(DonationDTO donationDTO) {
+    public Donation makeDonation(DonationDto donationDTO) {
 
         // fetching the currently authenticated user
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -54,17 +66,23 @@ public class DonationServiceImpl implements DonationService {
         return donationRepository.save(donation);
     }
 
+    /**
+     * Retrieves all donations made by a specific user.
+     *
+     * @param username The username of the user.
+     * @return A list of DonationDto objects representing the user's donations.
+     */
     @Override
-    public List<DonationDTO> getUserDonationsByUsername(String username) {
+    public List<DonationDto> getUserDonationsByUsername(String username) {
 
 
         List<Donation> donations = donationRepository.findAllByUserUsername(username);
-        List<DonationDTO> donationDTOS = new ArrayList<>();
+        List<DonationDto> donationDtos = new ArrayList<>();
 
         for (Donation donation: donations) {
-            DonationDTO donationDTO = commonService.convertDonationToDonationDTO(donation);
-            donationDTOS.add(donationDTO);
+            DonationDto donationDTO = commonService.convertDonationToDonationDTO(donation);
+            donationDtos.add(donationDTO);
         }
-        return donationDTOS;
+        return donationDtos;
     }
 }

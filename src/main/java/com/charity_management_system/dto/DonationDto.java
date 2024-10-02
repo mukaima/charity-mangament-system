@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DonationDTO {
+public class DonationDto {
 
 
     private double amount;

@@ -31,18 +31,30 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    /**
+     * Configures the security filter chain.
+     *
+     * @param http The HttpSecurity configuration object.
+     * @return A configured SecurityFilterChain.
+     * @throws Exception If configuration fails.
+     */
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/api/donations/**", "/api/categories/**", "/api/cases/showCases", "/api/auth/**", "/api/cases/me", "/api/cases/id", "/api/cases/getByCategory", "/api/cases/search").permitAll()
-                .requestMatchers("api/users/account",  "/api/cases/createCase", "api/donations/makeDonation", "/api/cases/deleteCase", "/api/cases/updateCase", "/api/cases/uploadImageToDrive").authenticated());
+                .authorizeHttpRequests(requests -> requests
+                .requestMatchers("api/v1/users/account",  "/api/v1/cases/createCase", "api/v1/donations/makeDonation", "/api/v1/cases/deleteCase", "/api/v1/cases/updateCase").authenticated()
+                        .anyRequest().permitAll());
         http.httpBasic(withDefaults());
         return http.build();
     }
 
+    /**
+     * Configures the CORS filter to allow cross-origin requests.
+     *
+     * @return A configured CorsFilter.
+     */
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -57,11 +69,23 @@ public class SecurityConfig {
         return new CorsFilter(source);
     }
 
+    /**
+     * Bean for encoding passwords using BCrypt.
+     *
+     * @return A BCryptPasswordEncoder instance.
+     */
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Bean to create an AuthenticationManager using the provided configuration.
+     *
+     * @param authenticationConfiguration The authentication configuration.
+     * @return A configured AuthenticationManager.
+     * @throws Exception If configuration fails.
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();

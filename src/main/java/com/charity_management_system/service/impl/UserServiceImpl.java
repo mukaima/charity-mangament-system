@@ -13,16 +13,16 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    /**
+     * Retrieves the user profile by username.
+     *
+     * @param username The username of the user.
+     * @return The UserProfile object representing the user's account.
+     */
     public UserProfile getUserAccount(String username){
         User user = userRepository.findByUsername(username)
-                        .orElseThrow(() -> new RuntimeException("user not found"));
+                .orElseThrow(() -> new RuntimeException("user not found"));
 
         return new UserProfile(user.getEmail(), user.getUsername(), user.getCaseList(), user.getDonations());
     }
-
-//    public User updateUserProfile(User user){
-//        getUserProfile();
-//        //update profile
-//        return userRepository.save(user);
-//    }
 }

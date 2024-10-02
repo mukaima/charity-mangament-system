@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +25,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
+    /**
+     * Registers a new user, hashes the password, and saves the user to the database.
+     *
+     * @param user The user to register.
+     * @return A response message indicating success or failure.
+     */
     @Override
     public String register(User user) {
         User savedUser = null;
@@ -44,10 +49,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return response;
     }
 
+    /**
+     * Authenticates a user using their username and password, and generates a JWT token if successful.
+     *
+     * @param loginRequest The login request containing the user's credentials.
+     * @return A LoginResponse containing the JWT token and user profile.
+     * @throws BadCredentialsException If authentication fails.
+     */
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
         try {
-            Authentication authentication = authenticationManager.authenticate(
+            authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginRequest.getUsername(),
                             loginRequest.getPassword()
@@ -71,11 +83,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
     }
 
+    /**
+     * Checks if a username already exists in the database.
+     *
+     * @param username The username to check.
+     * @return True if the username exists, false otherwise.
+     */
     @Override
     public Boolean checkUsername(String username) {
         return userRepository.existsByUsername(username);
     }
 
+    /**
+     * Checks if an email already exists in the database.
+     *
+     * @param email The email to check.
+     * @return True if the email exists, false otherwise.
+     */
     @Override
     public Boolean checkEmail(String email) {
         return userRepository.existsByEmail(email);

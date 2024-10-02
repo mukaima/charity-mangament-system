@@ -19,12 +19,24 @@ import java.util.Collections;
 public class GoogleDriveConfig {
     private static final String SERVICE_ACCOUNT_KEY_PATH = getPathToGoogleCredentials();
 
+    /**
+     * Retrieves the path to the Google credentials file.
+     *
+     * @return The path to the credentials file.
+     */
     private static String getPathToGoogleCredentials(){
         String currentDirectory = System.getProperty("user.dir");
         Path filePath = Paths.get(currentDirectory, "cred.json");
         return filePath.toString();
     }
 
+    /**
+     * Bean to create and return a Google Drive service instance.
+     *
+     * @return A configured Google Drive service instance.
+     * @throws GeneralSecurityException If security setup fails.
+     * @throws IOException              If there is an error reading the credentials file.
+     */
     @Bean
     public Drive driveService() throws GeneralSecurityException, IOException {
         GoogleCredential credential = GoogleCredential.fromStream(new FileInputStream(SERVICE_ACCOUNT_KEY_PATH))

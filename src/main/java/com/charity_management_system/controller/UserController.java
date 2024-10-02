@@ -8,13 +8,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
 
+    /**
+     * gets a user profile containing the user's cases and donations
+     * @return UserProfile object containing the cases and the donations
+     */
     @GetMapping("/account")
     public ResponseEntity<UserProfile> getUserAccount(){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
