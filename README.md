@@ -22,6 +22,8 @@ The Charity Management System is designed to facilitate the creation, management
 
 **Authentication**: JWT (JSON Web Tokens)
 
+**Testing FrameWork:** Junit5
+
 **Database:** Postgresql
 
 **Dependency management:** maven
