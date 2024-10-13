@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface DonationService {
 
-    List<Donation> getDonationByCaseId(int caseId);
+    List<Donation> getDonationsByCaseId(int caseId);
     Donation makeDonation(DonationDto donation);
     List<DonationDto> getUserDonationsByUsername(String username);
 }

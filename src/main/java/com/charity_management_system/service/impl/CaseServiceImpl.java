@@ -4,6 +4,9 @@ import com.charity_management_system.constant.ApplicationConstants;
 import com.charity_management_system.dto.CaseDto;
 import com.charity_management_system.dto.ImageSavingResponse;
 import com.charity_management_system.enums.CaseStatus;
+import com.charity_management_system.exception.custom.CaseNotFoundException;
+import com.charity_management_system.exception.custom.CategoryNotFoundException;
+import com.charity_management_system.exception.custom.UserNotFoundException;
 import com.charity_management_system.model.Case;
 import com.charity_management_system.model.Category;
 import com.charity_management_system.model.User;
@@ -59,7 +62,7 @@ public class CaseServiceImpl implements CaseService {
 
     private Case getCaseOrThrow(int caseId) {
         return caseRepository.findById(caseId)
-                .orElseThrow(() -> new RuntimeException("Case not found with ID: " + caseId));
+                .orElseThrow(() -> new CaseNotFoundException("Case not found with ID: " + caseId));
     }
 
     /**
@@ -101,10 +104,13 @@ public class CaseServiceImpl implements CaseService {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         log.debug("Fetching user for username: {}", username);
-        User caseUser = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("user not found"));
+        User caseUser = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User Not Found With Username: " + username));
         userCase.setUser(caseUser);
 
         Category category = categoryRepository.findByName(categoryName);
+        if (category == null) {
+            throw new IllegalArgumentException("Category not found: " + categoryName);
+        }
         category.getCaseList().add(userCase);
         userCase.setCategory(category);
 
@@ -139,7 +145,7 @@ public class CaseServiceImpl implements CaseService {
      * @param file The image file to upload.
      * @return An ImageSavingResponse containing the status and URL of the uploaded image.
      */
-    private ImageSavingResponse processingSavingImagesToDrive(File file){
+    public ImageSavingResponse processingSavingImagesToDrive(File file){
         ImageSavingResponse res = new ImageSavingResponse();
         try {
             String folderId = ApplicationConstants.FOLDER_ID;
@@ -181,9 +187,10 @@ public class CaseServiceImpl implements CaseService {
     public String deleteCase(int caseId) {
         if (caseRepository.existsById(caseId)){
             caseRepository.deleteById(caseId);
-            return "case deleted successfully";
+            return "Case Deleted Successfully";
+        }else {
+            throw new CaseNotFoundException("Case not found with ID: " + caseId);
         }
-        return "case not found";
     }
 
     /**
@@ -195,7 +202,8 @@ public class CaseServiceImpl implements CaseService {
     @Override
     public List<CaseDto> getUserCasesByUsername(String username) {
 
-        List<Case> cases = caseRepository.findAllByUserUsername(username);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User Not Found With Username: " + username));
+        List<Case> cases = user.getCaseList();
 
         List<CaseDto> caseDtos = new ArrayList<>();
 
@@ -217,7 +225,8 @@ public class CaseServiceImpl implements CaseService {
      */
     @Override
     public List<CaseDto> getCasesByCategory(int categoryId) {
-        List<Case> cases = caseRepository.findAllByCategoryId(categoryId);
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException("Category Not Found With Id: " + categoryId));
+        List<Case> cases = category.getCaseList();
         List<CaseDto> caseDtos = new ArrayList<>();
 
         for (Case c: cases){

@@ -8,7 +8,7 @@ import java.util.List;
 public interface CaseRepository extends JpaRepository<Case, Integer> {
 
     List<Case> findAllByTitle(String title);
-    List<Case> findAllByUserUsername(String userId);
+    List<Case> findAllByUserUsername(String username);
     List<Case> findAllByCategoryId(int categoryId);
     List<Case> findByTitleContainingOrDescriptionContaining(String title, String description);
 }

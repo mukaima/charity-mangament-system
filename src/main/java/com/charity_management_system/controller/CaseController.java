@@ -76,7 +76,7 @@ public class CaseController {
     public ResponseEntity<String> createCase(@RequestBody CaseDto userCase, @RequestParam String categoryName, @RequestParam("image") MultipartFile file) throws IOException {
         File tempFile = File.createTempFile("temp", null);
         file.transferTo(tempFile);
-        ResponseEntity.ok(caseService.createCase(userCase, categoryName, tempFile));
+        caseService.createCase(userCase, categoryName, tempFile);
         return ResponseEntity.ok("done creating case");
     }
 

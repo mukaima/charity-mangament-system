@@ -1,5 +1,6 @@
 package com.charity_management_system.service.impl;
 
+import com.charity_management_system.exception.custom.CategoryNotFoundException;
 import com.charity_management_system.model.Category;
 import com.charity_management_system.repository.CategoryRepository;
 import com.charity_management_system.service.CategoryService;
@@ -33,6 +34,6 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public Category getCategoryById(int categoryId) {
-        return categoryRepository.findById(categoryId).orElseThrow(() -> new RuntimeException("category not found"));
+        return categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException("Category Not Found With Id: " + categoryId));
     }
 }

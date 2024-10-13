@@ -1,5 +1,8 @@
 package com.charity_management_system.exception;
 
+import com.charity_management_system.exception.custom.CaseNotFoundException;
+import com.charity_management_system.exception.custom.CategoryNotFoundException;
+import com.charity_management_system.exception.custom.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,5 +21,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<String> handleBadCredentials(BadCredentialsException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+
+    @ExceptionHandler({CaseNotFoundException.class, UserNotFoundException.class, CategoryNotFoundException.class})
+    public ResponseEntity<String> handleNotFoundExceptions(RuntimeException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }

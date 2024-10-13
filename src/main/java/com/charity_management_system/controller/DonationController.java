@@ -23,7 +23,7 @@ public class DonationController {
      */
     @GetMapping("/getByCaseId/{caseId}")
     public ResponseEntity<List<Donation>> getDonationByCaseId(@PathVariable int caseId){
-        return ResponseEntity.ok(donationService.getDonationByCaseId(caseId));
+        return ResponseEntity.ok(donationService.getDonationsByCaseId(caseId));
     }
 
     /**

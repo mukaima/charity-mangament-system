@@ -5,6 +5,7 @@ import com.charity_management_system.dto.LoginRequest;
 import com.charity_management_system.dto.LoginResponse;
 import com.charity_management_system.dto.UserProfile;
 import com.charity_management_system.enums.Role;
+import com.charity_management_system.exception.custom.UserNotFoundException;
 import com.charity_management_system.model.User;
 import com.charity_management_system.repository.UserRepository;
 import com.charity_management_system.service.AuthenticationService;
@@ -68,7 +69,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             // Retrieve the user from the repository after successful authentication
             User user = userRepository.findByUsername(loginRequest.getUsername())
-                    .orElseThrow(() -> new RuntimeException("User not found!"));
+                    .orElseThrow(() -> new UserNotFoundException("User not found!"));
 
             // Create a UserProfile object
             UserProfile userProfile = new UserProfile(user.getUsername(), user.getEmail(), user.getCaseList(), user.getDonations());

@@ -1,6 +1,8 @@
 package com.charity_management_system.service.impl;
 
 import com.charity_management_system.dto.DonationDto;
+import com.charity_management_system.exception.custom.CaseNotFoundException;
+import com.charity_management_system.exception.custom.UserNotFoundException;
 import com.charity_management_system.model.Case;
 import com.charity_management_system.model.Donation;
 import com.charity_management_system.model.User;
@@ -31,8 +33,9 @@ public class DonationServiceImpl implements DonationService {
      * @return A list of Donation entities.
      */
     @Override
-    public List<Donation> getDonationByCaseId(int caseId) {
-        return donationRepository.findByCaseEntityId(caseId);
+    public List<Donation> getDonationsByCaseId(int caseId) {
+        Case theCase = caseRepository.findById(caseId).orElseThrow(() -> new CaseNotFoundException("Case Not Found With Id: " + caseId));
+        return theCase.getDonations();
     }
 
     /**
@@ -44,12 +47,11 @@ public class DonationServiceImpl implements DonationService {
     @Override
     public Donation makeDonation(DonationDto donationDTO) {
 
-        // fetching the currently authenticated user
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User caseUser = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("user not found"));
+        User caseUser = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("user not found"));
 
         int donationCaseId = donationDTO.getCaseId();
-        Case donationCase = caseRepository.findById(donationCaseId).orElseThrow(() -> new RuntimeException("case not found"));
+        Case donationCase = caseRepository.findById(donationCaseId).orElseThrow(() -> new CaseNotFoundException("case not found"));
 
         double raise = donationCase.getAmountRaised() + donationDTO.getAmount();
         donationCase.setAmountRaised(raise);
@@ -74,9 +76,9 @@ public class DonationServiceImpl implements DonationService {
      */
     @Override
     public List<DonationDto> getUserDonationsByUsername(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("user not found"));
 
-
-        List<Donation> donations = donationRepository.findAllByUserUsername(username);
+        List<Donation> donations = user.getDonations();
         List<DonationDto> donationDtos = new ArrayList<>();
 
         for (Donation donation: donations) {

@@ -1,6 +1,7 @@
 package com.charity_management_system.service.impl;
 
 import com.charity_management_system.dto.UserProfile;
+import com.charity_management_system.exception.custom.UserNotFoundException;
 import com.charity_management_system.model.User;
 import com.charity_management_system.repository.UserRepository;
 import com.charity_management_system.service.UserService;
@@ -21,8 +22,8 @@ public class UserServiceImpl implements UserService {
      */
     public UserProfile getUserAccount(String username){
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("user not found"));
+                .orElseThrow(() -> new UserNotFoundException("User Not Found With Username: " + username));
 
-        return new UserProfile(user.getEmail(), user.getUsername(), user.getCaseList(), user.getDonations());
+        return new UserProfile(user.getUsername(), user.getEmail(), user.getCaseList(), user.getDonations());
     }
 }
