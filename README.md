@@ -29,7 +29,14 @@ The Charity Management System is designed to facilitate the creation, management
 **Dependency management:** maven
 
 
+### Prerequisites
 
+- Java 11 or higher
+- Node.js and npm
+- PostgreSQL
+- Google Cloud account for Google Drive API access
+
+  
 ## Installation
 
 Clone the repository
